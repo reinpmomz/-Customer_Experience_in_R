@@ -1,0 +1,273 @@
+---
+title: "Customer_Experience_in_R"
+output:
+  pdf_document: default
+  html_document: 
+    keep_md: yes
+  word_document: default
+---
+
+# R Programming: Customer Experience in R
+
+## Example 
+
+
+```{R loading the data set}
+
+# Importing the data.table
+# ---
+# 
+library("data.table")
+library(stats)
+library(psych)
+library(ggplot2)
+
+# Reading our dataset
+# ---
+# 
+hospitality_dt <- fread('http://bit.ly/HospitalityDataset')
+View(hospitality_dt)
+attach(hospitality_dt)
+
+```
+
+
+```{R r structure of data}
+# What is the structure of the data?
+# ---
+# 
+head(hospitality_dt)
+
+```
+
+
+```{r number of variables and observations}
+# How many variables and observations are there?
+# 
+ncol(hospitality_dt)
+nrow(hospitality_dt)
+
+
+```
+
+```{r learn more about the data set}
+#learn more about the dataset
+help(hospitality_dt)
+??hospitality_dt
+str(hospitality_dt)
+class(hospitality_dt)
+typeof(hospitality_dt) 
+length(hospitality_dt)
+names(hospitality_dt) #display variable names
+#attributes(hospitality_dt) #names(hospitality_dt), class(hospitality_dt), row.names(hospitality_dt)
+```
+
+```{R}
+# What is the missing data?
+# 
+sum(is.na(hospitality_dt))
+
+
+```
+
+
+```{R}
+# NB: Let's deal with "-" in our scores variable
+# Assumption is that those customers did not fill in the survey
+# 
+hospitality_dt$score[hospitality_dt$score == "-"] <- NA
+
+head(hospitality_dt)
+
+
+```
+
+
+```{R}
+# Getting rid of missing data, check size and preview
+# Size of original dataset was 296852
+# 
+hospitality_dt1 <- na.omit(hospitality_dt)
+nrow(hospitality_dt1)
+head(hospitality_dt1)
+
+View(hospitality_dt1)
+attach(hospitality_dt1)
+
+
+```
+
+
+```{R}
+# What is the overall proportion of repeat customers?
+#duplicated() function uses logical values to determine duplicated values.  
+
+#duplicated(hospitality_dt1$user_id)
+
+sum(duplicated(hospitality_dt1$user_id))
+
+dim(hospitality_dt1[duplicated(hospitality_dt1$user_id),])[1] #gives you number of duplicates
+
+table(duplicated(hospitality_dt1$user_id))
+
+mean(duplicated(hospitality_dt1$user_id))
+
+sum(duplicated(hospitality_dt1$user_id)) / nrow(hospitality_dt1)
+
+
+```
+
+
+```{R}
+# How many times do customers come back on average?
+
+
+#unique() function uses numeric indicators to determine unique values.
+
+library(plyr)
+
+#unique(hospitality_dt1$user_id)
+
+#count(unique(hospitality_dt1$user_id))
+
+#table(unique(hospitality_dt1$user_id))
+
+dim(hospitality_dt1[unique(hospitality_dt1$user_id),])[1] #gives you number of uniques
+
+
+
+
+```
+
+
+```{R}
+# How many customers are repeat customers per branch?
+#   
+sum(duplicated(hospitality_dt1[,c('user_id','branch')]))
+
+
+```
+
+
+```{R}
+# What is the NPS?
+# 
+
+# Importing our NPS library
+# 
+library(NPS)
+
+# Converting score column to numeric
+#
+hospitality_dt1$score <- as.numeric(as.character(hospitality_dt1$score))
+
+# Computing our NPS
+nps(hospitality_dt1$score)
+
+
+```
+
+
+```{R}
+# Here are the proportions of respondents giving each Likelihood to
+# recommend response
+#
+prop.table(table(hospitality_dt1$score))
+
+
+```
+
+
+```{R histrogram of the scores}
+# Plotting a histrogram of the scores
+# 
+
+# Lets first import tidyverse
+#
+library(tidyverse)
+
+hist(
+  hospitality_dt1$score, breaks = -1:10,
+  col = c(rep("red", 7), rep("yellow", 2), rep("green", 2))
+)
+
+
+```
+
+
+```{R barplot of the scores}
+# Here's a barplot. It's very similar, though for categorical responses
+# it's often slightly easier to interpret
+#
+barplot(
+ prop.table(table(hospitality_dt1$score)),
+ col = c(rep("red", 7), rep("yellow", 2), rep("green", 2))
+)
+
+
+```
+
+
+```{R ggplot of nps}
+# Is there a relationship between NPS segment and amount spent? 
+#  
+ggplot(hospitality_dt1, aes(x=score, y=amount)) + geom_point()
+
+
+
+```
+
+## Exercise
+
+
+```{R Only uniqueid Data}
+
+#Build a model with unique id only 
+
+hospitality_dt1[duplicated(hospitality_dt1$user_id),] #gives you duplicate rows
+
+hospitality_dt1[!duplicated(hospitality_dt1$user_id),] #gives you unique rows
+
+
+
+#Data with unique id only
+hospitality_dt2 <- hospitality_dt1[!duplicated(hospitality_dt1$user_id),]
+View(hospitality_dt2)
+attach(hospitality_dt2)
+
+nrow(hospitality_dt2)
+
+# Converting score column to numeric
+hospitality_dt2$score <- as.numeric(as.character(hospitality_dt2$score))
+
+# Computing our NPS
+nps(hospitality_dt2$score)
+
+# proportions of respondents giving each Likelihood to
+
+prop.table(table(hospitality_dt2$score))
+
+#Histogram
+
+hist(
+  hospitality_dt2$score, breaks = -1:10,
+  col = c(rep("red", 7), rep("yellow", 2), rep("green", 2))
+)
+
+#Barplot
+
+barplot(
+ prop.table(table(hospitality_dt2$score)),
+ col = c(rep("red", 7), rep("yellow", 2), rep("green", 2))
+)
+
+
+ggplot(hospitality_dt2, aes(x=score, y=amount)) + geom_point()
+```
+
+```{R}
+# Can we build a logistic regression model to predict 
+# whether a customer will be a repeat customer or not?
+# 
+
+```
