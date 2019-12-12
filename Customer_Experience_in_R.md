@@ -431,7 +431,7 @@ hist(
 )
 ```
 
-![](Customer_Experience_in_R_files/figure-html/histrogram of the scores-1.png)<!-- -->
+![](Customer_Experience_in_R_files/figure-html/histscores-1.png)<!-- -->
 
 
 
@@ -445,7 +445,7 @@ barplot(
 )
 ```
 
-![](Customer_Experience_in_R_files/figure-html/barplot of the scores-1.png)<!-- -->
+![](Customer_Experience_in_R_files/figure-html/barplotscores-1.png)<!-- -->
 
 
 
@@ -455,7 +455,7 @@ barplot(
 ggplot(hospitality_dt1, aes(x=score, y=amount)) + geom_point()
 ```
 
-![](Customer_Experience_in_R_files/figure-html/ggplot of nps-1.png)<!-- -->
+![](Customer_Experience_in_R_files/figure-html/ggplotnps-1.png)<!-- -->
 
 ## Exercise
 
@@ -589,7 +589,7 @@ hist(
 )
 ```
 
-![](Customer_Experience_in_R_files/figure-html/Only uniqueid Data-1.png)<!-- -->
+![](Customer_Experience_in_R_files/figure-html/uniqueidData-1.png)<!-- -->
 
 ```r
 #Barplot
@@ -600,13 +600,13 @@ barplot(
 )
 ```
 
-![](Customer_Experience_in_R_files/figure-html/Only uniqueid Data-2.png)<!-- -->
+![](Customer_Experience_in_R_files/figure-html/uniqueidData-2.png)<!-- -->
 
 ```r
 ggplot(hospitality_dt2, aes(x=score, y=amount)) + geom_point()
 ```
 
-![](Customer_Experience_in_R_files/figure-html/Only uniqueid Data-3.png)<!-- -->
+![](Customer_Experience_in_R_files/figure-html/uniqueidData-3.png)<!-- -->
 
 
 ```r

@@ -1,9 +1,9 @@
 ---
 title: "Customer_Experience_in_R"
 output:
-  pdf_document: default
   html_document: 
     keep_md: yes
+  pdf_document: default
   word_document: default
 ---
 
@@ -178,7 +178,7 @@ prop.table(table(hospitality_dt1$score))
 ```
 
 
-```{R histrogram of the scores}
+```{R histscores}
 # Plotting a histrogram of the scores
 # 
 
@@ -195,7 +195,7 @@ hist(
 ```
 
 
-```{R barplot of the scores}
+```{R barplotscores}
 # Here's a barplot. It's very similar, though for categorical responses
 # it's often slightly easier to interpret
 #
@@ -208,7 +208,7 @@ barplot(
 ```
 
 
-```{R ggplot of nps}
+```{R ggplotnps}
 # Is there a relationship between NPS segment and amount spent? 
 #  
 ggplot(hospitality_dt1, aes(x=score, y=amount)) + geom_point()
@@ -220,7 +220,7 @@ ggplot(hospitality_dt1, aes(x=score, y=amount)) + geom_point()
 ## Exercise
 
 
-```{R Only uniqueid Data}
+```{R uniqueidData}
 
 #Build a model with unique id only 
 
