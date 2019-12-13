@@ -222,52 +222,209 @@ ggplot(hospitality_dt1, aes(x=score, y=amount)) + geom_point()
 
 ```{R uniqueidData}
 
-#Build a model with unique id only 
+#Build a data model with unique id only 
 
-hospitality_dt1[duplicated(hospitality_dt1$user_id),] #gives you duplicate rows
 
 hospitality_dt1[!duplicated(hospitality_dt1$user_id),] #gives you unique rows
 
 
 
 #Data with unique id only
-hospitality_dt2 <- hospitality_dt1[!duplicated(hospitality_dt1$user_id),]
-View(hospitality_dt2)
-attach(hospitality_dt2)
+hospitality_dt2u <- hospitality_dt1[!duplicated(hospitality_dt1$user_id),]
+View(hospitality_dt2u)
+attach(hospitality_dt2u)
 
-nrow(hospitality_dt2)
+nrow(hospitality_dt2u)
 
 # Converting score column to numeric
-hospitality_dt2$score <- as.numeric(as.character(hospitality_dt2$score))
+hospitality_dt2u$score <- as.numeric(as.character(hospitality_dt2u$score))
 
 # Computing our NPS
-nps(hospitality_dt2$score)
+nps(hospitality_dt2u$score)
 
 # proportions of respondents giving each Likelihood to
 
-prop.table(table(hospitality_dt2$score))
+prop.table(table(hospitality_dt2u$score))
 
 #Histogram
 
 hist(
-  hospitality_dt2$score, breaks = -1:10,
+  hospitality_dt2u$score, breaks = -1:10,
   col = c(rep("red", 7), rep("yellow", 2), rep("green", 2))
 )
 
 #Barplot
 
 barplot(
- prop.table(table(hospitality_dt2$score)),
+ prop.table(table(hospitality_dt2u$score)),
  col = c(rep("red", 7), rep("yellow", 2), rep("green", 2))
 )
 
 
-ggplot(hospitality_dt2, aes(x=score, y=amount)) + geom_point()
+ggplot(hospitality_dt2u, aes(x=score, y=amount)) + geom_point()
+```
+
+```{R}
+
+
+#For the unique userID data: separate the genders, find the average amount spent, find average NPS
+hospitality_dt2uF <- hospitality_dt2u[hospitality_dt2u$gender == "F"]
+View(hospitality_dt2uF)
+attach(hospitality_dt2uF)
+
+nrow(hospitality_dt2uF)
+
+mean(hospitality_dt2uF$amount)
+
+# Converting score column to numeric
+#
+hospitality_dt2uF$score <- as.numeric(as.character(hospitality_dt2uF$score))
+
+# Computing our NPS
+nps(hospitality_dt2uF$score)
+
+prop.table(table(hospitality_dt2uF$score))
+
+
+
+
+hospitality_dt2uM <- hospitality_dt2u[hospitality_dt2u$gender == "M"]
+View(hospitality_dt2uM)
+attach(hospitality_dt2uM)
+
+nrow(hospitality_dt2uM)
+
+mean(hospitality_dt2uM$amount)
+
+# Converting score column to numeric
+#
+hospitality_dt2uM$score <- as.numeric(as.character(hospitality_dt2uM$score))
+
+# Computing our NPS
+nps(hospitality_dt2uM$score)
+
+prop.table(table(hospitality_dt2uM$score))
+
+```
+
+
+```{R}
+
+#Add a column with the word 'repeat' for repeated user ID and 'non-repeat' for unique user ID
+
+#Data with repeated id only
+
+hospitality_dt1[duplicated(hospitality_dt1$user_id),] #gives you duplicate rows
+
+hospitality_dt2r <- hospitality_dt1[duplicated(hospitality_dt1$user_id),]
+View(hospitality_dt2r)
+attach(hospitality_dt2r)
+
+nrow(hospitality_dt2r)
+
+
+#Whatever is on the left of the <- sign “gets” whatever is on the right
+
+hospitality_dt2r$repeat_customer<-"repeat"
+hospitality_dt2u$repeat_customer<-"non-repeat"
+
+
+#To join two data frames (datasets) vertically
+hospitality_dt1new <- rbind(hospitality_dt2r, hospitality_dt2u)
+View(hospitality_dt1new)
+attach(hospitality_dt1new)
+
+nrow(hospitality_dt1new)
+
+
 ```
 
 ```{R}
 # Can we build a logistic regression model to predict 
 # whether a customer will be a repeat customer or not?
 # 
+
+hospitality_dt1new$repeat_customer <- factor(hospitality_dt1new$repeat_customer, 
+                                             levels = c("repeat","non-repeat"), 
+                                      labels = c(0,1))
+
+# Converting repeat_customer column to numeric
+
+hospitality_dt1new$repeat_customer <- as.numeric(as.character(hospitality_dt1new$repeat_customer))
+
+hospnew.glm = glm(formula=repeat_customer ~ amount + score + gender , data = hospitality_dt1new,
+                  family=binomial)
+hospnew.glm
+
+summary(hospnew.glm)
+
+
+```
+
+```{R}
+
+#amount spent, score and male gender are significant.
+
+#The logistic regression coefficients give the change in the log odds of the outcome for 
+#a one unit increase in the predictor variable.
+
+#For a one unit increase in amount spent, the log odds of being a repeat customer increases 
+#by 0.0000707
+
+#For every one unit change in score, the log odds of repeat (versus non-repeat) decreases 
+#by -0.0443532
+
+#Visiting Stony Hill coffee house being male versus being female changes the log odds of 
+#being a repeat customer by -0.1300867.
+
+
+
+#confidence intervals for the coefficient estimates
+## CIs using profiled log-likelihood
+confint(hospnew.glm)
+
+## CIs using standard errors
+confint.default(hospnew.glm)
+
+```
+
+```{R}
+#We can test for an overall effect of gender using the wald.test function of the aod library. 
+
+#The order in which the coefficients are given in the table of coefficients is the same 
+#as the order of the terms in the model. 
+
+#This is important because the wald.test function refers to the coefficients by their order 
+#in the model. We use the wald.test function. b supplies the coefficients, while Sigma supplies 
+#the variance covariance matrix of the error terms, finally Terms tells R which terms in the 
+#model are to be tested, in this case, terms 4.
+
+library(aod)
+
+wald.test(b = coef(hospnew.glm), Sigma = vcov(hospnew.glm), Terms = 4)
+```
+
+
+```{R}
+#The chi-squared test statistic of 23.1, with one degree of freedom is associated with 
+#a p-value of 0.0000015 indicating that the overall effect of rank is statistically significant.
+
+#exponentiate the coefficients and interpret them as odds-ratios
+
+## odds ratios only
+exp(coef(hospnew.glm))
+
+
+#To put it all in one table, we use cbind to bind the coefficients and confidence intervals #column-wise.
+
+## odds ratios and 95% CI
+exp(cbind(OR = coef(hospnew.glm), confint(hospnew.glm)))
+
+```
+
+```{R}
+
+#For every one unit increase in amount spent, the odds of being a repeat customer 
+#(versus non-repeat) increases by a factor of 1.0000707
 
 ```
