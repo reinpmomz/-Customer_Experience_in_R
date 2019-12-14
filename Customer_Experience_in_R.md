@@ -362,7 +362,7 @@ library(tidyverse)
 ```
 
 ```
-## -- Attaching packages ------------------------------------------------------------------ tidyverse 1.3.0 --
+## -- Attaching packages --------------------------------------- tidyverse 1.3.0 --
 ```
 
 ```
@@ -373,7 +373,7 @@ library(tidyverse)
 ```
 
 ```
-## -- Conflicts --------------------------------------------------------------------- tidyverse_conflicts() --
+## -- Conflicts ------------------------------------------ tidyverse_conflicts() --
 ## x ggplot2::%+%()     masks psych::%+%()
 ## x ggplot2::alpha()   masks psych::alpha()
 ## x dplyr::arrange()   masks plyr::arrange()
@@ -565,6 +565,20 @@ attach(hospitality_dt2uF)
 ```
 
 ```r
+head(hospitality_dt2uF)
+```
+
+```
+##     user_id gender timestamp survey_completion score amount          branch
+## 1:   242833      F   45:20.0          FINISHED     5   1460 Nairobi Central
+## 2: 17144551      F   55:19.5          TIMEDOUT     0   1380 Nairobi Central
+## 3: 17887216      F   00:38.1          TIMEDOUT     9    990   Nairobi South
+## 4:   630299      F   03:49.9          TIMEDOUT     9    840    Nairobi West
+## 5:  6345132      F   42:13.1          TIMEDOUT    10   2230       Satellite
+## 6: 17237328      F   59:23.9          TIMEDOUT     9   1080    Nairobi West
+```
+
+```r
 nrow(hospitality_dt2uF)
 ```
 
@@ -637,6 +651,20 @@ attach(hospitality_dt2uM)
 ## 
 ##     amount, branch, gender, score, survey_completion, timestamp,
 ##     user_id
+```
+
+```r
+head(hospitality_dt2uM)
+```
+
+```
+##     user_id gender timestamp survey_completion score amount        branch
+## 1:  1697459      M   39:01.6          TIMEDOUT     9    690  Nairobi East
+## 2:   607011      M   20:46.1          TIMEDOUT    10    460 Nairobi South
+## 3: 17249001      M   35:08.6          TIMEDOUT     7   1200 Nairobi South
+## 4:   703633      M   07:30.7          TIMEDOUT    10    360     Satellite
+## 5:   668285      M   24:28.9          TIMEDOUT     7    590 Nairobi North
+## 6: 17355338      M   49:13.1          TIMEDOUT    10    420 Nairobi South
 ```
 
 ```r
@@ -810,6 +838,27 @@ attach(hospitality_dt1new)
 ```
 
 ```r
+head(hospitality_dt1new)
+```
+
+```
+##     user_id gender timestamp survey_completion score amount          branch
+## 1: 17430789      F   28:02.5          FINISHED     9    570 Nairobi Central
+## 2:   328437      F   17:03.2          FINISHED    10   1600   Nairobi South
+## 3:   668285      M   36:33.7          TIMEDOUT     9    170   Nairobi South
+## 4:   206998      F   32:55.0          FINISHED    10    950   Nairobi North
+## 5:   323566      M   08:43.0          TIMEDOUT     9    500 Nairobi Central
+## 6:  1317686      M   13:35.8          TIMEDOUT    10   1420   Nairobi South
+##    repeat_customer
+## 1:          repeat
+## 2:          repeat
+## 3:          repeat
+## 4:          repeat
+## 5:          repeat
+## 6:          repeat
+```
+
+```r
 nrow(hospitality_dt1new)
 ```
 
@@ -827,10 +876,33 @@ hospitality_dt1new$repeat_customer <- factor(hospitality_dt1new$repeat_customer,
                                              levels = c("repeat","non-repeat"), 
                                       labels = c(0,1))
 
+
+
 # Converting repeat_customer column to numeric
 
 hospitality_dt1new$repeat_customer <- as.numeric(as.character(hospitality_dt1new$repeat_customer))
 
+head(hospitality_dt1new)
+```
+
+```
+##     user_id gender timestamp survey_completion score amount          branch
+## 1: 17430789      F   28:02.5          FINISHED     9    570 Nairobi Central
+## 2:   328437      F   17:03.2          FINISHED    10   1600   Nairobi South
+## 3:   668285      M   36:33.7          TIMEDOUT     9    170   Nairobi South
+## 4:   206998      F   32:55.0          FINISHED    10    950   Nairobi North
+## 5:   323566      M   08:43.0          TIMEDOUT     9    500 Nairobi Central
+## 6:  1317686      M   13:35.8          TIMEDOUT    10   1420   Nairobi South
+##    repeat_customer
+## 1:               0
+## 2:               0
+## 3:               0
+## 4:               0
+## 5:               0
+## 6:               0
+```
+
+```r
 hospnew.glm = glm(formula=repeat_customer ~ amount + score + gender , data = hospitality_dt1new,
                   family=binomial)
 hospnew.glm

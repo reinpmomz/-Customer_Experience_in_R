@@ -272,6 +272,7 @@ hospitality_dt2uF <- hospitality_dt2u[hospitality_dt2u$gender == "F"]
 View(hospitality_dt2uF)
 attach(hospitality_dt2uF)
 
+head(hospitality_dt2uF)
 nrow(hospitality_dt2uF)
 
 mean(hospitality_dt2uF$amount)
@@ -292,6 +293,7 @@ hospitality_dt2uM <- hospitality_dt2u[hospitality_dt2u$gender == "M"]
 View(hospitality_dt2uM)
 attach(hospitality_dt2uM)
 
+head(hospitality_dt2uM)
 nrow(hospitality_dt2uM)
 
 mean(hospitality_dt2uM$amount)
@@ -334,6 +336,7 @@ hospitality_dt1new <- rbind(hospitality_dt2r, hospitality_dt2u)
 View(hospitality_dt1new)
 attach(hospitality_dt1new)
 
+head(hospitality_dt1new)
 nrow(hospitality_dt1new)
 
 
@@ -348,9 +351,13 @@ hospitality_dt1new$repeat_customer <- factor(hospitality_dt1new$repeat_customer,
                                              levels = c("repeat","non-repeat"), 
                                       labels = c(0,1))
 
+
+
 # Converting repeat_customer column to numeric
 
 hospitality_dt1new$repeat_customer <- as.numeric(as.character(hospitality_dt1new$repeat_customer))
+
+head(hospitality_dt1new)
 
 hospnew.glm = glm(formula=repeat_customer ~ amount + score + gender , data = hospitality_dt1new,
                   family=binomial)
