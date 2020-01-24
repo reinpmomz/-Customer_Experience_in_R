@@ -60,13 +60,25 @@ typeof(hospitality_dt)
 length(hospitality_dt)
 names(hospitality_dt) #display variable names
 #attributes(hospitality_dt) #names(hospitality_dt), class(hospitality_dt), row.names(hospitality_dt)
+
+```
+
+
+```{r}
+
+summary(hospitality_dt)
+
+#distribution of input variables
+table(hospitality_dt$gender)
+table(hospitality_dt$score)
+table(hospitality_dt$branch)
+
 ```
 
 ```{R}
 # What is the missing data?
 # 
 sum(is.na(hospitality_dt))
-
 
 ```
 
@@ -93,6 +105,22 @@ head(hospitality_dt1)
 
 View(hospitality_dt1)
 attach(hospitality_dt1)
+
+
+str(hospitality_dt1)
+class(hospitality_dt1)
+typeof(hospitality_dt1) 
+length(hospitality_dt1)
+names(hospitality_dt1) #display variable names
+
+
+summary(hospitality_dt1)
+
+#distribution of input variables
+table(hospitality_dt1$gender)
+table(hospitality_dt1$score)
+table(hospitality_dt1$amount)
+table(hospitality_dt1$branch)
 
 
 ```
@@ -236,6 +264,8 @@ attach(hospitality_dt2u)
 
 nrow(hospitality_dt2u)
 
+mean(hospitality_dt2u$amount)
+
 # Converting score column to numeric
 hospitality_dt2u$score <- as.numeric(as.character(hospitality_dt2u$score))
 
@@ -340,6 +370,23 @@ head(hospitality_dt1new)
 nrow(hospitality_dt1new)
 
 
+str(hospitality_dt1new)
+class(hospitality_dt1new)
+typeof(hospitality_dt1new) 
+length(hospitality_dt1new)
+names(hospitality_dt1new) #display variable names
+
+
+summary(hospitality_dt1new)
+
+#distribution of input variables
+table(hospitality_dt1new$gender)
+table(hospitality_dt1new$score)
+table(hospitality_dt1new$amount)
+table(hospitality_dt1new$branch)
+table(hospitality_dt1new$repeat_customer)
+
+
 ```
 
 ```{R}
@@ -355,6 +402,7 @@ hospitality_dt1new$repeat_customer <- factor(hospitality_dt1new$repeat_customer,
 
 # Converting repeat_customer column to numeric
 
+#1. Gender-factor, score - numeric, amount - numeric
 hospitality_dt1new$repeat_customer <- as.numeric(as.character(hospitality_dt1new$repeat_customer))
 
 head(hospitality_dt1new)
@@ -395,26 +443,8 @@ confint.default(hospnew.glm)
 
 ```
 
-```{R}
-#We can test for an overall effect of gender using the wald.test function of the aod library. 
-
-#The order in which the coefficients are given in the table of coefficients is the same 
-#as the order of the terms in the model. 
-
-#This is important because the wald.test function refers to the coefficients by their order 
-#in the model. We use the wald.test function. b supplies the coefficients, while Sigma supplies 
-#the variance covariance matrix of the error terms, finally Terms tells R which terms in the 
-#model are to be tested, in this case, terms 4.
-
-library(aod)
-
-wald.test(b = coef(hospnew.glm), Sigma = vcov(hospnew.glm), Terms = 4)
-```
-
 
 ```{R}
-#The chi-squared test statistic of 23.1, with one degree of freedom is associated with 
-#a p-value of 0.0000015 indicating that the overall effect of rank is statistically significant.
 
 #exponentiate the coefficients and interpret them as odds-ratios
 
@@ -422,7 +452,8 @@ wald.test(b = coef(hospnew.glm), Sigma = vcov(hospnew.glm), Terms = 4)
 exp(coef(hospnew.glm))
 
 
-#To put it all in one table, we use cbind to bind the coefficients and confidence intervals #column-wise.
+#To put it all in one table, we use cbind to bind the coefficients and confidence intervals
+#column-wise.
 
 ## odds ratios and 95% CI
 exp(cbind(OR = coef(hospnew.glm), confint(hospnew.glm)))
@@ -435,3 +466,226 @@ exp(cbind(OR = coef(hospnew.glm), confint(hospnew.glm)))
 #(versus non-repeat) increases by a factor of 1.0000707
 
 ```
+
+```{R}
+#We may also wish to see measures of how well our model fits. This can be particularly 
+#useful when comparing competing models.
+
+#The output produced by summary(hospnew.glm) included indices of fit, 
+#including the null and deviance residuals and the AIC. 
+
+#One measure of model fit is the significance of the overall model. This test asks 
+#whether the model with predictors fits significantly better than a model with just an 
+#intercept (i.e., a null model). 
+
+#The test statistic is the difference between the residual deviance for the model 
+#with predictors and the null model. The test statistic is distributed chi-squared 
+#with degrees of freedom equal to the differences in degrees of freedom between the 
+#current and the null model (i.e., the number of predictor variables in the model).
+
+
+#To find the difference in deviance for the two models (i.e., the test statistic), 
+#we use the command:
+
+with(hospnew.glm, null.deviance - deviance)
+
+
+#The degrees of freedom for the difference between the two models is equal to the number of
+#predictor variables in the model, and can be obtained using:
+
+with(hospnew.glm, df.null - df.residual)
+
+#the p-value can be obtained using:
+
+with(hospnew.glm, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
+
+
+#To see the model’s log likelihood, we type:
+
+logLik(hospnew.glm)
+
+```
+
+```{R}
+#The chi-square of 113.5097 with 3 degrees of freedom and an associated p-value of less 
+#than 0.001 (1.927131e-24) tells us that our model as a whole fits significantly better 
+#than an empty model. This is sometimes called a likelihood ratio test.
+
+
+
+#(the deviance residual is -2*log likelihood)
+#-2*-17397.51=34795.02
+
+```
+
+
+
+```{R}
+
+#2. Gender-factor, score - factor, amount - numeric
+
+#convert score to a factor to indicate that score should be treated as a categorical variable.
+
+hospitality_dt1new$score <- factor(hospitality_dt1new$score)
+
+hospnew1.glm = glm(formula=repeat_customer ~ amount + score + gender , data = hospitality_dt1new,
+                  family=binomial)
+hospnew1.glm
+
+summary(hospnew1.glm)
+
+
+
+#We can test for an overall effect of score using the wald.test function of the aod library. 
+
+#The order in which the coefficients are given in the table of coefficients is the same 
+#as the order of the terms in the model. 
+
+#This is important because the wald.test function refers to the coefficients by their order 
+#in the model. We use the wald.test function. b supplies the coefficients, while Sigma supplies 
+#the variance covariance matrix of the error terms, finally Terms tells R which terms in the 
+#model are to be tested, in this case, terms 3 to 12.
+
+library(aod)
+
+wald.test(b = coef(hospnew1.glm), Sigma = vcov(hospnew1.glm), Terms = 3:12)
+
+
+#The chi-squared test statistic of 78.9, with 10 degrees of freedom is associated with 
+#a p-value of 8.4e-13 indicating that the overall effect of score is statistically significant.
+
+
+#We can also test additional hypotheses about the differences in the coefficients for the 
+#different levels of score. 
+
+#Below we test that the coefficient for score=4 is equal to the coefficient for score=5. 
+#The first line of code below creates a vector l that defines the test we want to perform. 
+#In this case, we want to test the difference (subtraction) of the terms for score=4 and 
+#score=5 (i.e., the 6th and 7th terms in the model). To contrast these two terms, we multiply 
+#one of them by 1, and the other by -1. The other terms in the model are not involved in the 
+#test, so they are multiplied by 0. The second line of code below uses L=l to tell R that we 
+#wish to base the test on the vector l (rather than using the Terms option as we did above).
+
+l <- cbind(0, 0, 0, 0, 0, 1, -1, 0, 0, 0, 0, 0, 0)
+wald.test(b = coef(hospnew1.glm), Sigma = vcov(hospnew1.glm), L = l)
+
+#The chi-squared test statistic of 0.45 with 1 degree of freedom is associated with a p-value 
+#of 0.5, indicating that the difference between the coefficient for score=4 and the coefficient 
+#for score=5 is statistically not significant.
+
+
+#Below we test that the coefficient for score=8 is equal to the coefficient for score=9.
+m <- cbind(0, 0, 0, 0, 0, 0, 0, 0, 0, 1, -1, 0, 0)
+wald.test(b = coef(hospnew1.glm), Sigma = vcov(hospnew1.glm), L = m)
+
+#The chi-squared test statistic of 22.9 with 1 degree of freedom is associated with a p-value 
+#of 1.7e-06, indicating that the difference between the coefficient for score=8 and the 
+#coefficient for score=9 is statistically significant.
+
+
+```
+
+
+
+```{R}
+#how well our model fits. This can be particularly 
+#useful when comparing competing models.
+
+
+#To find the difference in deviance for the two models (i.e., the test statistic), 
+#we use the command:
+
+with(hospnew1.glm, null.deviance - deviance)
+
+
+#The degrees of freedom for the difference between the two models is equal to the number of
+#predictor variables in the model, and can be obtained using:
+
+with(hospnew1.glm, df.null - df.residual)
+
+#the p-value can be obtained using:
+
+with(hospnew1.glm, pchisq(null.deviance - deviance, df.null - df.residual, lower.tail = FALSE))
+
+
+#To see the model’s log likelihood, we type:
+
+logLik(hospnew1.glm)
+
+
+#The chi-square of 141.8541 with 12 degrees of freedom and an associated p-value of 
+#less than 0.001 (2.52885e-24) tells us that our model as a whole fits significantly better 
+#than an empty model. This is sometimes called a likelihood ratio test.
+
+
+
+#(the deviance residual is -2*log likelihood)
+#-2*-17383.34=34766.68
+
+```
+
+```{R}
+
+#amount spent, Two terms of score (9 and 10) and male gender are significant.
+
+#The logistic regression coefficients give the change in the log odds of the outcome for 
+#a one unit increase in the predictor variable.
+
+#For a one unit increase in amount spent, the log odds of being a repeat customer increases 
+#by 0.00006983
+
+#Ranking the Visit to Stony Hill coffee house with a score of 1 verses score of 0, changes 
+#the log odds of being a repeat customer by -0.1601
+
+#Visiting Stony Hill coffee house being male versus being female changes the log odds of 
+#being a repeat customer by -0.1327.
+
+
+
+#confidence intervals for the coefficient estimates
+## CIs using profiled log-likelihood
+confint(hospnew1.glm)
+
+## CIs using standard errors
+confint.default(hospnew1.glm)
+
+
+#exponentiate the coefficients and interpret them as odds-ratios
+
+## odds ratios only
+exp(coef(hospnew1.glm))
+
+
+#To put it all in one table, we use cbind to bind the coefficients and confidence intervals
+#column-wise.
+
+## odds ratios and 95% CI
+exp(cbind(OR = coef(hospnew1.glm), confint(hospnew1.glm)))
+
+
+#For every one unit increase in amount spent, the odds of being a repeat customer 
+#(versus non-repeat) increases by a factor of 1.0000698
+
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

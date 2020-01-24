@@ -5,7 +5,7 @@ Build a model to predict if a customer will return
  
  - Build a data model with unique user ID's only
  
- - For the unique userID data: separate the genders, find the average amount spent, find average NPS
+ - For the unique userID data model: separate the genders, find the average amount spent, find average NPS
  
  - Add a column with the word 'repeat' for repeated user ID and 'non-repeat' for unique user ID
  
