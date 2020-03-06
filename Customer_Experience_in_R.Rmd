@@ -24,7 +24,9 @@ library(ggplot2)
 
 # Reading our dataset
 # ---
-# 
+#fread accepts http and https URLs directly as well as operating system commands 
+#such as sed and awk output.
+
 hospitality_dt <- fread('http://bit.ly/HospitalityDataset')
 View(hospitality_dt)
 attach(hospitality_dt)
@@ -389,6 +391,9 @@ table(hospitality_dt1new$repeat_customer)
 
 ```
 
+
+### Model (Gender-factor, score - numeric, amount - numeric)
+
 ```{R}
 # Can we build a logistic regression model to predict 
 # whether a customer will be a repeat customer or not?
@@ -402,7 +407,7 @@ hospitality_dt1new$repeat_customer <- factor(hospitality_dt1new$repeat_customer,
 
 # Converting repeat_customer column to numeric
 
-#1. Gender-factor, score - numeric, amount - numeric
+
 hospitality_dt1new$repeat_customer <- as.numeric(as.character(hospitality_dt1new$repeat_customer))
 
 head(hospitality_dt1new)
@@ -519,10 +524,11 @@ logLik(hospnew.glm)
 ```
 
 
+### Model (Gender-factor, score - factor, amount - numeric)
 
 ```{R}
 
-#2. Gender-factor, score - factor, amount - numeric
+
 
 #convert score to a factor to indicate that score should be treated as a categorical variable.
 

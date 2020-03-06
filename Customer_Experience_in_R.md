@@ -37,7 +37,9 @@ library(ggplot2)
 ```r
 # Reading our dataset
 # ---
-# 
+#fread accepts http and https URLs directly as well as operating system commands 
+#such as sed and awk output.
+
 hospitality_dt <- fread('http://bit.ly/HospitalityDataset')
 View(hospitality_dt)
 attach(hospitality_dt)
@@ -678,18 +680,18 @@ library(tidyverse)
 ```
 
 ```
-## -- Attaching packages --------------------------------------------------------------- tidyverse 1.3.0 --
+## -- Attaching packages -------------------------------------------------------------------------- tidyverse 1.3.0 --
 ```
 
 ```
-## <U+2713> tibble  2.1.3     <U+2713> dplyr   0.8.3
-## <U+2713> tidyr   1.0.0     <U+2713> stringr 1.4.0
-## <U+2713> readr   1.3.1     <U+2713> forcats 0.4.0
-## <U+2713> purrr   0.3.3
+## v tibble  2.1.3     v dplyr   0.8.3
+## v tidyr   1.0.0     v stringr 1.4.0
+## v readr   1.3.1     v forcats 0.4.0
+## v purrr   0.3.3
 ```
 
 ```
-## -- Conflicts ------------------------------------------------------------------ tidyverse_conflicts() --
+## -- Conflicts ----------------------------------------------------------------------------- tidyverse_conflicts() --
 ## x ggplot2::%+%()     masks psych::%+%()
 ## x ggplot2::alpha()   masks psych::alpha()
 ## x dplyr::arrange()   masks plyr::arrange()
@@ -1460,6 +1462,9 @@ table(hospitality_dt1new$repeat_customer)
 ```
 
 
+### Model (Gender-factor, score - numeric, amount - numeric)
+
+
 ```r
 # Can we build a logistic regression model to predict 
 # whether a customer will be a repeat customer or not?
@@ -1473,7 +1478,7 @@ hospitality_dt1new$repeat_customer <- factor(hospitality_dt1new$repeat_customer,
 
 # Converting repeat_customer column to numeric
 
-#1. Gender-factor, score - numeric, amount - numeric
+
 hospitality_dt1new$repeat_customer <- as.numeric(as.character(hospitality_dt1new$repeat_customer))
 
 head(hospitality_dt1new)
@@ -1708,11 +1713,10 @@ logLik(hospnew.glm)
 ```
 
 
+### Model (Gender-factor, score - factor, amount - numeric)
 
 
 ```r
-#2. Gender-factor, score - factor, amount - numeric
-
 #convert score to a factor to indicate that score should be treated as a categorical variable.
 
 hospitality_dt1new$score <- factor(hospitality_dt1new$score)
