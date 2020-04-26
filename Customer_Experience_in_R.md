@@ -1560,14 +1560,14 @@ summary(hospnew.glm)
 #The logistic regression coefficients give the change in the log odds of the outcome for 
 #a one unit increase in the predictor variable.
 
-#For a one unit increase in amount spent, the log odds of being a repeat customer increases 
-#by 0.0000707
+#For a one unit increase in amount spent, the change in log odds of being a repeat customer increases 
+#by 0.0000707 holding all other variables constant.
 
-#For every one unit change in score, the log odds of repeat (versus non-repeat) decreases 
-#by -0.0443532
+#For every one unit change in score, the change in log odds of repeat (versus non-repeat) decreases 
+#by -0.0443532 holding all other variables constant.
 
-#Visiting Stony Hill coffee house being male versus being female changes the log odds of 
-#being a repeat customer by -0.1300867.
+#The log odds of being a repeat male customer is 0.1300867 lower than the log odds of being a repeat 
+#female customer holding all other variables constant.
 
 
 
@@ -1638,7 +1638,13 @@ exp(cbind(OR = coef(hospnew.glm), confint(hospnew.glm)))
 
 ```r
 #For every one unit increase in amount spent, the odds of being a repeat customer 
-#(versus non-repeat) increases by a factor of 1.0000707
+#(versus non-repeat) increases by a factor of 1.0000707 holding all other variables constant.
+
+#For every one unit change in score, the odds of being a repeat customer 
+#(versus non-repeat) decreases by a factor of 0.9566160 holding all other variables constant.
+
+#The odds of being a repeat male customer is 0.878 times the odds of being a repeat female customer
+#holding all other variables constant. 
 ```
 
 
@@ -1710,6 +1716,21 @@ logLik(hospnew.glm)
 
 #(the deviance residual is -2*log likelihood)
 #-2*-17397.51=34795.02
+
+#Predict the model
+
+newdata = data.frame(amount=990 , score=10 , gender="M")
+
+predict(hospnew.glm, newdata, type="response")
+```
+
+```
+##         1 
+## 0.7956226
+```
+
+```r
+hospitality_dt1new$PredModel_Scorenumeric <-predict(hospnew.glm, hospitality_dt1new, type="response")
 ```
 
 
@@ -1930,7 +1951,7 @@ logLik(hospnew1.glm)
 #a one unit increase in the predictor variable.
 
 #For a one unit increase in amount spent, the log odds of being a repeat customer increases 
-#by 0.00006983
+#by 0.00006983 holding all other variables constant.
 
 #Ranking the Visit to Stony Hill coffee house with a score of 1 verses score of 0, changes 
 #the log odds of being a repeat customer by -0.1601
@@ -2036,6 +2057,22 @@ exp(cbind(OR = coef(hospnew1.glm), confint(hospnew1.glm)))
 ```r
 #For every one unit increase in amount spent, the odds of being a repeat customer 
 #(versus non-repeat) increases by a factor of 1.0000698
+
+
+#Predict the model
+
+newdata = data.frame(amount=990 , score="10" , gender="M")
+
+predict(hospnew1.glm, newdata, type="response")
+```
+
+```
+##         1 
+## 0.7940795
+```
+
+```r
+hospitality_dt1new$PredModel_Scorefactor <-predict(hospnew1.glm, hospitality_dt1new, type="response")
 ```
 
 
