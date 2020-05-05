@@ -9,7 +9,9 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="Reinp" />
 
+<meta name="date" content="2020-05-05" />
 
 <title>Customer_Experience_in_R</title>
 
@@ -362,12 +364,23 @@ summary {
 
 
 <h1 class="title toc-ignore">Customer_Experience_in_R</h1>
+<h4 class="author">Reinp</h4>
+<h4 class="date">2020-05-05</h4>
 
 </div>
 
 
-<div id="r-programming-customer-experience-in-r" class="section level1">
-<h1>R Programming: Customer Experience in R</h1>
+<div id="r-programming" class="section level1">
+<h1>R Programming</h1>
+<div id="set-chunk-requirements" class="section level2">
+<h2>Set Chunk requirements</h2>
+<pre class="r"><code>knitr::opts_chunk$set(echo = TRUE, message = FALSE, warning = FALSE)
+#echo=FALSE indicates that the code will not be shown in the final document 
+#(though any results/output would still be displayed).
+#include=FALSE to have the chunk evaluated, but neither the code nor its output displayed
+# warning=FALSE and message=FALSE suppress any R warnings or messages from being included 
+#in the final document</code></pre>
+</div>
 <div id="example" class="section level2">
 <h2>Example</h2>
 <pre class="r"><code># Importing the data.table
@@ -376,13 +389,9 @@ summary {
 library(&quot;data.table&quot;)
 library(stats)
 library(psych)
-library(ggplot2)</code></pre>
-<pre><code>## 
-## Attaching package: &#39;ggplot2&#39;</code></pre>
-<pre><code>## The following objects are masked from &#39;package:psych&#39;:
-## 
-##     %+%, alpha</code></pre>
-<pre class="r"><code># Reading our dataset
+library(ggplot2)
+
+# Reading our dataset
 # ---
 #fread accepts http and https URLs directly as well as operating system commands 
 #such as sed and awk output.
@@ -411,9 +420,8 @@ ncol(hospitality_dt)</code></pre>
 help(hospitality_dt)</code></pre>
 <pre><code>## No documentation for &#39;hospitality_dt&#39; in specified packages and libraries:
 ## you could try &#39;??hospitality_dt&#39;</code></pre>
-<pre class="r"><code>??hospitality_dt</code></pre>
-<pre><code>## starting httpd help server ... done</code></pre>
-<pre class="r"><code>str(hospitality_dt)</code></pre>
+<pre class="r"><code>??hospitality_dt
+str(hospitality_dt)</code></pre>
 <pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   296852 obs. of  7 variables:
 ##  $ user_id          : int  621602 242833 621602 621602 6345755 751525 6591998 401557 17887026 1697459 ...
 ##  $ gender           : chr  &quot;M&quot; &quot;F&quot; &quot;M&quot; &quot;M&quot; ...
@@ -498,12 +506,10 @@ nrow(hospitality_dt1)</code></pre>
 ## 5:   630299      F   03:49.9          TIMEDOUT     9    840    Nairobi West
 ## 6:   607011      M   20:46.1          TIMEDOUT    10    460   Nairobi South</code></pre>
 <pre class="r"><code>View(hospitality_dt1)
-attach(hospitality_dt1)</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre class="r"><code>str(hospitality_dt1)</code></pre>
+attach(hospitality_dt1)
+
+
+str(hospitality_dt1)</code></pre>
 <pre><code>## Classes &#39;data.table&#39; and &#39;data.frame&#39;:   36402 obs. of  7 variables:
 ##  $ user_id          : int  242833 1697459 17144551 17887216 630299 607011 17249001 6345132 17237328 17887747 ...
 ##  $ gender           : chr  &quot;F&quot; &quot;M&quot; &quot;F&quot; &quot;F&quot; ...
@@ -765,31 +771,9 @@ prop.table(table(hospitality_dt1$score))</code></pre>
 
 # Lets first import tidyverse
 #
-library(tidyverse)</code></pre>
-<pre><code>## -- Attaching packages -------------------------------------------------------------------------- tidyverse 1.3.0 --</code></pre>
-<pre><code>## v tibble  2.1.3     v dplyr   0.8.3
-## v tidyr   1.0.0     v stringr 1.4.0
-## v readr   1.3.1     v forcats 0.4.0
-## v purrr   0.3.3</code></pre>
-<pre><code>## -- Conflicts ----------------------------------------------------------------------------- tidyverse_conflicts() --
-## x ggplot2::%+%()     masks psych::%+%()
-## x ggplot2::alpha()   masks psych::alpha()
-## x dplyr::arrange()   masks plyr::arrange()
-## x dplyr::between()   masks data.table::between()
-## x purrr::compact()   masks plyr::compact()
-## x dplyr::count()     masks plyr::count()
-## x dplyr::failwith()  masks plyr::failwith()
-## x dplyr::filter()    masks stats::filter()
-## x dplyr::first()     masks data.table::first()
-## x dplyr::id()        masks plyr::id()
-## x dplyr::lag()       masks stats::lag()
-## x dplyr::last()      masks data.table::last()
-## x dplyr::mutate()    masks plyr::mutate()
-## x dplyr::rename()    masks plyr::rename()
-## x dplyr::summarise() masks plyr::summarise()
-## x dplyr::summarize() masks plyr::summarize()
-## x purrr::transpose() masks data.table::transpose()</code></pre>
-<pre class="r"><code>hist(
+library(tidyverse)
+
+hist(
   hospitality_dt1$score, breaks = -1:10,
   col = c(rep(&quot;red&quot;, 7), rep(&quot;yellow&quot;, 2), rep(&quot;green&quot;, 2))
 )</code></pre>
@@ -828,16 +812,9 @@ hospitality_dt1[!duplicated(hospitality_dt1$user_id),] #gives you unique rows</c
 <pre class="r"><code>#Data with unique id only
 hospitality_dt2u &lt;- hospitality_dt1[!duplicated(hospitality_dt1$user_id),]
 View(hospitality_dt2u)
-attach(hospitality_dt2u)</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt1:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre class="r"><code>nrow(hospitality_dt2u)</code></pre>
+attach(hospitality_dt2u)
+
+nrow(hospitality_dt2u)</code></pre>
 <pre><code>## [1] 29653</code></pre>
 <pre class="r"><code>mean(hospitality_dt2u$amount)</code></pre>
 <pre><code>## [1] 1139.029</code></pre>
@@ -874,20 +851,9 @@ barplot(
 <pre class="r"><code>#For the unique userID data: separate the genders, find the average amount spent, find average NPS
 hospitality_dt2uF &lt;- hospitality_dt2u[hospitality_dt2u$gender == &quot;F&quot;]
 View(hospitality_dt2uF)
-attach(hospitality_dt2uF)</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2u:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt1:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre class="r"><code>head(hospitality_dt2uF)</code></pre>
+attach(hospitality_dt2uF)
+
+head(hospitality_dt2uF)</code></pre>
 <pre><code>##     user_id gender timestamp survey_completion score amount          branch
 ## 1:   242833      F   45:20.0          FINISHED     5   1460 Nairobi Central
 ## 2: 17144551      F   55:19.5          TIMEDOUT     0   1380 Nairobi Central
@@ -914,24 +880,9 @@ nps(hospitality_dt2uF$score)</code></pre>
 ## 0.04102633 0.09494855 0.09615128 0.63664306</code></pre>
 <pre class="r"><code>hospitality_dt2uM &lt;- hospitality_dt2u[hospitality_dt2u$gender == &quot;M&quot;]
 View(hospitality_dt2uM)
-attach(hospitality_dt2uM)</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2uF:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2u:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt1:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre class="r"><code>head(hospitality_dt2uM)</code></pre>
+attach(hospitality_dt2uM)
+
+head(hospitality_dt2uM)</code></pre>
 <pre><code>##     user_id gender timestamp survey_completion score amount        branch
 ## 1:  1697459      M   39:01.6          TIMEDOUT     9    690  Nairobi East
 ## 2:   607011      M   20:46.1          TIMEDOUT    10    460 Nairobi South
@@ -975,28 +926,9 @@ hospitality_dt1[duplicated(hospitality_dt1$user_id),] #gives you duplicate rows<
 ## 6749:   314116      M   58:53.3          FINISHED     9    200   Nairobi North</code></pre>
 <pre class="r"><code>hospitality_dt2r &lt;- hospitality_dt1[duplicated(hospitality_dt1$user_id),]
 View(hospitality_dt2r)
-attach(hospitality_dt2r)</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2uM:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2uF:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2u:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt1:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre class="r"><code>nrow(hospitality_dt2r)</code></pre>
+attach(hospitality_dt2r)
+
+nrow(hospitality_dt2r)</code></pre>
 <pre><code>## [1] 6749</code></pre>
 <pre class="r"><code>#Whatever is on the left of the &lt;- sign “gets” whatever is on the right
 
@@ -1007,32 +939,9 @@ hospitality_dt2u$repeat_customer&lt;-&quot;non-repeat&quot;
 #To join two data frames (datasets) vertically
 hospitality_dt1new &lt;- rbind(hospitality_dt2r, hospitality_dt2u)
 View(hospitality_dt1new)
-attach(hospitality_dt1new)</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2r:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2uM:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2uF:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt2u:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt1:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre><code>## The following objects are masked from hospitality_dt:
-## 
-##     amount, branch, gender, score, survey_completion, timestamp,
-##     user_id</code></pre>
-<pre class="r"><code>head(hospitality_dt1new)</code></pre>
+attach(hospitality_dt1new)
+
+head(hospitality_dt1new)</code></pre>
 <pre><code>##     user_id gender timestamp survey_completion score amount          branch
 ## 1: 17430789      F   28:02.5          FINISHED     9    570 Nairobi Central
 ## 2:   328437      F   17:03.2          FINISHED    10   1600   Nairobi South
@@ -1343,7 +1252,6 @@ hospnew.glm</code></pre>
 #confidence intervals for the coefficient estimates
 ## CIs using profiled log-likelihood
 confint(hospnew.glm)</code></pre>
-<pre><code>## Waiting for profiling to be done...</code></pre>
 <pre><code>##                     2.5 %        97.5 %
 ## (Intercept)  1.744776e+00  1.982818e+00
 ## amount       4.481482e-05  9.727911e-05
@@ -1367,7 +1275,6 @@ exp(coef(hospnew.glm))</code></pre>
 
 ## odds ratios and 95% CI
 exp(cbind(OR = coef(hospnew.glm), confint(hospnew.glm)))</code></pre>
-<pre><code>## Waiting for profiling to be done...</code></pre>
 <pre><code>##                    OR     2.5 %    97.5 %
 ## (Intercept) 6.4416292 5.7246174 7.2631852
 ## amount      1.0000707 1.0000448 1.0000973
@@ -1597,7 +1504,6 @@ logLik(hospnew1.glm)</code></pre>
 #confidence intervals for the coefficient estimates
 ## CIs using profiled log-likelihood
 confint(hospnew1.glm)</code></pre>
-<pre><code>## Waiting for profiling to be done...</code></pre>
 <pre><code>##                     2.5 %        97.5 %
 ## (Intercept)  1.656924e+00  2.001187e+00
 ## amount       4.395304e-05  9.641197e-05
@@ -1643,7 +1549,6 @@ exp(coef(hospnew1.glm))</code></pre>
 
 ## odds ratios and 95% CI
 exp(cbind(OR = coef(hospnew1.glm), confint(hospnew1.glm)))</code></pre>
-<pre><code>## Waiting for profiling to be done...</code></pre>
 <pre><code>##                    OR     2.5 %    97.5 %
 ## (Intercept) 6.2077640 5.2431560 7.3978329
 ## amount      1.0000698 1.0000440 1.0000964
@@ -1664,6 +1569,7 @@ exp(cbind(OR = coef(hospnew1.glm), confint(hospnew1.glm)))</code></pre>
 
 #Predict the model
 
+# in data repeat (0)
 newdata = data.frame(amount=990 , score=&quot;10&quot; , gender=&quot;M&quot;)
 
 predict(hospnew1.glm, newdata, type=&quot;response&quot;)</code></pre>
