@@ -409,7 +409,7 @@ table(hospitality_dt1new$repeat_customer)
 
 ```{R}
 # Can we build a logistic regression model to predict 
-# whether a customer will be a repeat customer or not?
+# whether a customer will be a non-repeat customer?
 # 
 
 hospitality_dt1new$repeat_customer <- factor(hospitality_dt1new$repeat_customer, 
@@ -441,14 +441,14 @@ summary(hospnew.glm)
 #The logistic regression coefficients give the change in the log odds of the outcome for 
 #a one unit increase in the predictor variable.
 
-#For a one unit increase in amount spent, the change in log odds of being a repeat customer increases 
-#by 0.0000707 holding all other variables constant.
+#For a one unit increase in amount spent, the change in log odds of being a non-repeat customer increases by 0.0000707 holding all other variables constant.
 
-#For every one unit change in score, the change in log odds of repeat (versus non-repeat) decreases 
-#by -0.0443532 holding all other variables constant.
+#For every one unit change in score, the change in log odds of non-repeat (versus repeat) decreases 
+#by 0.0443532 holding all other variables constant.
 
-#The log odds of being a repeat male customer is 0.1300867 lower than the log odds of being a repeat 
-#female customer holding all other variables constant.
+#The log odds of being a non-repeat male customer verses being a non-repeat
+# female customer changes the log odds by -0.1300867 holding all other 
+# variables constant.
 
 
 
@@ -470,8 +470,8 @@ confint.default(hospnew.glm)
 exp(coef(hospnew.glm))
 
 
-#To put it all in one table, we use cbind to bind the coefficients and confidence intervals
-#column-wise.
+#To put it all in one table, we use cbind to bind the coefficients and
+# confidence intervals column-wise.
 
 ## odds ratios and 95% CI
 exp(cbind(OR = coef(hospnew.glm), confint(hospnew.glm)))
@@ -480,14 +480,16 @@ exp(cbind(OR = coef(hospnew.glm), confint(hospnew.glm)))
 
 ```{R}
 
-#For every one unit increase in amount spent, the odds of being a repeat customer 
-#(versus non-repeat) increases by a factor of 1.0000707 holding all other variables constant.
+#For every one unit increase in amount spent, the odds of being a non-repeat
+# customer (versus repeat) increases by a factor of 1.0000707 holding all other
+#  variables constant.
 
-#For every one unit change in score, the odds of being a repeat customer 
-#(versus non-repeat) decreases by a factor of 0.9566160 holding all other variables constant.
+#For every one unit change in score, the odds of being a non-repeat customer 
+#(versus repeat) increases by a factor of 0.9566160 holding all other variables
+# constant.
 
-#The odds of being a repeat male customer is 0.878 times the odds of being a repeat female customer
-#holding all other variables constant. 
+#The odds of being a non-repeat male customer is 0.8780193 times the odds of
+# being a non-repeat female customer holding all other variables constant. 
 
 ```
 
@@ -661,17 +663,17 @@ logLik(hospnew1.glm)
 
 #amount spent, Two terms of score (9 and 10) and male gender are significant.
 
-#The logistic regression coefficients give the change in the log odds of the outcome for 
-#a one unit increase in the predictor variable.
+#The logistic regression coefficients give the change in the log odds of the
+# outcome for a one unit increase in the predictor variable.
 
-#For a one unit increase in amount spent, the log odds of being a repeat customer increases 
-#by 0.00006983 holding all other variables constant.
+#For a one unit increase in amount spent, the log odds of being a non-repeat
+# customer decreases by 0.00006983 holding all other variables constant.
 
 #Ranking the Visit to Stony Hill coffee house with a score of 1 verses score of 0, changes 
-#the log odds of being a repeat customer by -0.1601
+#the log odds of being a non-repeat customer by -0.1601
 
-#Visiting Stony Hill coffee house being male versus being female changes the log odds of 
-#being a repeat customer by -0.1327.
+#Visiting Stony Hill coffee house being male versus being female changes 
+#the log odds of being a non-repeat customer by -0.1327.
 
 
 
@@ -696,8 +698,8 @@ exp(coef(hospnew1.glm))
 exp(cbind(OR = coef(hospnew1.glm), confint(hospnew1.glm)))
 
 
-#For every one unit increase in amount spent, the odds of being a repeat customer 
-#(versus non-repeat) increases by a factor of 1.0000698
+#For every one unit increase in amount spent, the odds of being a non-repeat
+# customer (versus repeat) increases by a factor of 1.0000698
 
 
 #Predict the model
